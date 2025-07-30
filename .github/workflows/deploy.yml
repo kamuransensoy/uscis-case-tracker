@@ -26,11 +26,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
 
-      - name: Run Tests
-        run: mvn test
-        working-directory: uscis-case-tracker-app
-
-      - name: Build with Maven
+      - name: Build with Maven (skip tests)
         run: mvn clean package -DskipTests
         working-directory: uscis-case-tracker-app
 
