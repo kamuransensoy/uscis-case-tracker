@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,21 +30,19 @@ jobs:
         run: mvn clean package -DskipTests
         working-directory: uscis-case-tracker-app
 
-      - name: Copy JAR to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
-          source: "uscis-case-tracker-app/target/*.jar"
-          target: "/home/ubuntu/app"
-
-      - name: Restart Spring Boot App on EC2
+      - name: Deploy and Restart App on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
+            echo "🧹 Eski JAR dosyaları siliniyor..."
+            rm -f /home/ubuntu/app/*.jar
+
+            echo "📦 Yeni JAR dosyası kopyalanıyor..."
+            scp -o StrictHostKeyChecking=no uscis-case-tracker-app/target/*.jar ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
+
+            echo "🔄 Uygulama yeniden başlatılıyor..."
             pkill -f 'java -jar' || true
             nohup java -jar /home/ubuntu/app/*.jar > /home/ubuntu/app/app.log 2>&1 &
