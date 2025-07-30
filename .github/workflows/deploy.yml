@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout source code
@@ -31,18 +31,12 @@ jobs:
         working-directory: uscis-case-tracker-app
 
       - name: Deploy and Restart App on EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            echo "🧹 Eski JAR dosyaları siliniyor..."
-            rm -f /home/ubuntu/app/*.jar
+        run: |
+          echo "🧹 Eski JAR dosyaları siliniyor..."
+          ssh -i ~/Desktop/uscis-key.pem ubuntu@${{ secrets.EC2_HOST }} "rm -f /home/ubuntu/app/*.jar"
 
-            echo "📦 Yeni JAR dosyası kopyalanıyor..."
-            scp -o StrictHostKeyChecking=no uscis-case-tracker-app/target/*.jar ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
+          echo "📦 Yeni JAR dosyası kopyalanıyor..."
+          scp -i ~/Desktop/uscis-key.pem uscis-case-tracker-app/target/*.jar ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
 
-            echo "🔄 Uygulama yeniden başlatılıyor..."
-            pkill -f 'java -jar' || true
-            nohup java -jar /home/ubuntu/app/*.jar > /home/ubuntu/app/app.log 2>&1 &
+          echo "🔄 Uygulama yeniden başlatılıyor..."
+          ssh -i ~/Desktop/uscis-key.pem ubuntu@${{ secrets.EC2_HOST }} "pkill -f 'java -jar' || true && nohup java -jar /home/ubuntu/app/*.jar > /home/ubuntu/app/app.log 2>&1 &"
