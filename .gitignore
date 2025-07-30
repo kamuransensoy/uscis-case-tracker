@@ -1,0 +1,36 @@
+# Build outputs
+/target/
+build/
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / Secrets
+.env
+application.properties
+application.yml
+application-*.yml
+
+# Maven
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle (if used)
+.gradle/
+
+# Others
+*.swp
+*.swo
+

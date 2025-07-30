@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>USCIS Tracker</title>
+</head>
+<body>
+<h2>Check Your USCIS Case Status</h2>
+
+<form th:action="@{/web/uscis-tracker}" method="post">
+  <label for="receiptNumber">Receipt Number:</label>
+  <input type="text" id="receiptNumber" name="receiptNumber" required />
+  <button type="submit">Check Status</button>
+</form>
+
+<div th:if="${receiptNumber}">
+  <h3>Case Details:</h3>
+  <p><strong>Receipt Number:</strong> <span th:text="${receiptNumber}"></span></p>
+  <p><strong>Form Type:</strong> <span th:text="${formType}"></span></p>
+  <p><strong>Submitted Date:</strong> <span th:text="${submittedDate}"></span></p>
+  <p><strong>Status:</strong> <span th:text="${status}"></span></p>
+  <p><strong>Description:</strong> <span th:text="${statusDescription}"></span></p>
+
+  <div th:if="${history}">
+    <h4>Status History:</h4>
+    <ul>
+      <li th:each="entry : ${history}">
+        <strong th:text="${entry.date}">Date</strong>:
+        <span th:text="${entry.completedTextEn}">History Text</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div th:if="${error}">
+  <p style="color: red;"><strong>Error:</strong> <span th:text="${error}"></span></p>
+</div>
+</body>
+</html>
