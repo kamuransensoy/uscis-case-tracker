@@ -34,5 +34,27 @@
 <div th:if="${error}">
   <p style="color: red;"><strong>Error:</strong> <span th:text="${error}"></span></p>
 </div>
+
+<!-- ✅ Listed User Cases -->
+<div th:if="${cases}">
+  <h3>My Cases</h3>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>Case Number</th>
+      <th>Status</th>
+      <th>Last Checked</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${cases}">
+      <td th:text="${c.caseNumber}">CaseNum</td>
+      <td th:text="${c.lastStatus}">Status</td>
+      <td th:text="${#temporals.format(c.lastCheckedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
 </body>
 </html>

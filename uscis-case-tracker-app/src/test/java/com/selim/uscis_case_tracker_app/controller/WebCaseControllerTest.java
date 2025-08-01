@@ -1,9 +1,11 @@
 package com.selim.uscis_case_tracker_app.controller;
 
 import com.selim.uscis_case_tracker_app.dto.CaseStatusResponse;
+import com.selim.uscis_case_tracker_app.filter.JwtAuthenticationFilter;
 import com.selim.uscis_case_tracker_app.repository.UserRepository;
 import com.selim.uscis_case_tracker_app.service.AuthService;
 import com.selim.uscis_case_tracker_app.service.CaseService;
+import com.selim.uscis_case_tracker_app.service.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +26,12 @@ class WebCaseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @MockBean
     private CaseService caseService;
